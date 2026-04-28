@@ -13,9 +13,6 @@ const InvestmentAPI = {
   cancelSip: (investmentId) =>
     client.patch(`/investments/${investmentId}/cancel-sip`),
 
-  cancelInvestment: (investmentId) =>
-    client.delete(`/investments/${investmentId}`),
-
   // Advisor: get all investors with P&L
   getAdvisorClients: () =>
     client.get('/investments/advisor/clients'),

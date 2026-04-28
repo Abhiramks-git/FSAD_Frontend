@@ -248,6 +248,10 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  // Show session-timeout banner when redirected with ?reason=timeout
+  const timedOut = typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('reason') === 'timeout';
+
   const refresh = useCallback(() => { setCaptcha(mkCaptcha()); setAns(''); }, []);
 
   const handleSubmit = async e => {
@@ -306,6 +310,23 @@ export default function Login() {
         {/* Right form panel */}
         <div className="auth-right">
           <div className="auth-form-box animate-fadein">
+            {timedOut && (
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', gap: '0.625rem',
+                background: '#fffbeb', border: '1.5px solid #fde68a',
+                borderRadius: 10, padding: '0.875rem 1rem', marginBottom: '1.25rem',
+              }}>
+                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>⏱</span>
+                <div>
+                  <p style={{ fontWeight: 700, color: '#92400e', fontSize: '0.875rem', marginBottom: '0.2rem' }}>
+                    Session expired
+                  </p>
+                  <p style={{ color: '#a16207', fontSize: '0.8125rem', lineHeight: 1.5 }}>
+                    You were logged out after 15 minutes of inactivity. Please sign in again to continue.
+                  </p>
+                </div>
+              </div>
+            )}
             <h1 className="auth-form-title">Sign in</h1>
             <p className="auth-form-sub">Don't have an account? <Link to="/register">Create one free</Link></p>
 

@@ -227,19 +227,11 @@ export default function InvestorDashboard() {
       .finally(() => setLoadPort(false));
   }, []);
 
-  // Fetch on mount, every 30s, and whenever tab becomes visible again
-  // This ensures stats update immediately when user returns from Invest page
+  // Auto-refresh every 30 seconds so new investments show immediately
   useEffect(() => {
     fetchData();
     const iv = setInterval(fetchData, 30000);
-
-    const onVisible = () => { if (document.visibilityState === 'visible') fetchData(); };
-    document.addEventListener('visibilitychange', onVisible);
-
-    return () => {
-      clearInterval(iv);
-      document.removeEventListener('visibilitychange', onVisible);
-    };
+    return () => clearInterval(iv);
   }, [fetchData]);
 
   const fmt    = v  => v != null ? `₹${Number(v).toLocaleString('en-IN', { maximumFractionDigits:0 })}` : '—';
